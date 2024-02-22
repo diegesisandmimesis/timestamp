@@ -40,6 +40,7 @@ versionInfo: GameID
 	}
 ;
 gameMain: GameMainDef
+	_timestamp = nil
 	initialPlayerChar = me
 	inlineCommand(cmd) { "<b>&gt;<<toString(cmd).toUpper()>></b>"; }
 	printCommand(cmd) { "<.p>\n\t<<inlineCommand(cmd)>><.p> "; }
@@ -47,3 +48,28 @@ gameMain: GameMainDef
 
 startRoom: Room 'Void' "This is a featureless void.";
 +me: Person;
+
+#ifdef __DEBUG
+
+modify TimestampAction
+	_report() {
+		local t0, t1, diff;
+
+		if(gameMain._timestamp == nil)
+			gameMain._timestamp = gTimestamp;
+
+		t0 = gameMain._timestamp;
+		t1 = gTimestamp;
+
+		"Timestamp = <<t1.printable()>>\n ";
+		diff = t1.difference(t0);
+		"Difference = <<diff.printable()>>\n ";
+	}
+	execSystemAction() {
+		_report();
+		gBumpTimestamp;
+		_report();
+	}
+;
+
+#endif // __DEBUG
