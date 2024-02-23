@@ -14,6 +14,7 @@
 //
 //	Usage is straighforward.  To get the current timestamp:
 //
+//		// ts will contain an instance of the Timestamp class
 //		local ts = gTimestamp;
 //
 //	To bump the timestamp without changing the turn number:
@@ -36,16 +37,22 @@
 // THE TIMESTAMP CLASS
 //
 //	The Timestamp class has a number of methods for working with
-//	timestamps.
+//	timestamps.  Given a Timestamp instance ts and another Timestamp
+//	instance v:
 //
-//		clone()		returns a copy of the timestamp
-//		isEqual(v)	boolean true if the timestamp is the same as v
-//		isBefore(v)	boolean true if the timestamp is before v
-//		isAfter(v)	boolean true if the timestamp is after v
-//		difference(v)	returns a timestamp instance containing the
-//				difference between the timestamp and v
-//		add(v)		adds v to the timestamp
-//		subtract(v)	subtracts v from the timestamp
+//		ts.clone()		returns a copy of ts
+//		ts.isEqual(v)		boolean true if ts is the same as v
+//		ts.isBefore(v)		boolean true if ts is before v
+//		ts.isAfter(v)		boolean true if ts is after v
+//		ts.difference(v)	returns a timestamp instance
+//					containing the difference between
+//					ts and v
+//		ts.add(v)		adds v to ts
+//		ts.subtract(v)		subtracts v from ts
+//		ts.set(turn, serial)	sets the value of ts, the first
+//					argument being a turn number and the
+//					second being the counter within the
+//					turn
 //
 //
 #include <adv3.h>
@@ -63,40 +70,40 @@ timestampModuleID: ModuleID {
 
 class Timestamp: object
 	turn = 0
-	fraction = 0
+	serial = 0
 	construct(t, f?) {
 		if(t != nil)
 			turn = t;
 		if(f != nil)
-			fraction = f;
+			serial = f;
 	}
-	clone() { return(new Timestamp(turn, fraction)); }
-	isEqual(v) { return((v.turn == turn) && (v.fraction == fraction)); }
+	clone() { return(new Timestamp(turn, serial)); }
+	isEqual(v) { return((v.turn == turn) && (v.serial == serial)); }
 	isBefore(v) {
-		return((turn < v.turn) || (fraction < v.fraction));
+		return((turn < v.turn) || (serial < v.serial));
 	}
 	isAfter(v) {
-		return((turn > v.turn) || (fraction > v.fraction));
+		return((turn > v.turn) || (serial > v.serial));
 	}
 	difference(v) {
-		return(new Timestamp(turn - v.turn, fraction - v.fraction));
+		return(new Timestamp(turn - v.turn, serial - v.serial));
 	}
 	add(v) {
 		turn += v.turn;
-		fraction += v.fraction;
+		serial += v.serial;
 		return(self);
 	}
 	subtract(v) {
 		turn -= v.turn;
-		fraction -= v.fraction;
+		serial -= v.serial;
 		return(self);
 	}
 	set(t, f?) {
 		turn = t;
-		fraction = ((f != nil) ? f : 0);
+		serial = ((f != nil) ? f : 0);
 	}
 	printable() {
-		return('<<toString(turn)>>/<<toString(fraction)>>');
+		return('<<toString(turn)>>/<<toString(serial)>>');
 	}
 ;
 
@@ -118,7 +125,7 @@ timestampService: object
 		if(v == nil)
 			v = 1;
 		timestamp();
-		_ts.fraction += v;
+		_ts.serial += v;
 		return(_ts);
 	}
 	check(v?) {
