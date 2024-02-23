@@ -131,6 +131,7 @@ timestampService: object
 	check(v?) {
 		if((v == nil) || !v.ofKind(Timestamp))
 			return(nil);
+//aioSay('\ncheck:  <<toString(v.turn)>> ? <<toString(timestamp().turn)>> (<<toString(libGlobal.totalTurns)>>): <<toString(v.isEqual(timestamp()))>>\n ');
 		return(v.isEqual(timestamp()));
 	}
 	duration(v?) {
