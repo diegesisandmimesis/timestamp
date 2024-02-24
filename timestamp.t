@@ -103,7 +103,7 @@ class Timestamp: object
 		serial = ((f != nil) ? f : 0);
 	}
 	printable() {
-		return('<<toString(turn)>>/<<toString(serial)>>');
+		return('<<toString(turn)>>:<<toString(serial)>>');
 	}
 ;
 
